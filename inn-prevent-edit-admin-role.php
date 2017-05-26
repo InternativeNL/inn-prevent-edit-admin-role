@@ -4,7 +4,7 @@ Plugin Name: Internative prevent edit admin role
 Plugin URI: www.internative.nl
 Description: Prevent other roles then admins from deleting, editing, or creating an administrator
 Author: Internative
-Version: 0.0.1
+Version: 1.0.0
 Author URI: www.internative.nl
 License: GPLv2 or later
 Text Domain: inn-prevent-edit-admin-role

@@ -12,9 +12,25 @@ class ISA_User_Caps {
 
 	// Remove 'Administrator' from the list of roles if the current user is not an admin
 	public function editable_roles( $roles ) {
-		if ( isset( $roles['administrator'] ) && ! current_user_can( 'administrator' ) ) {
-		  unset( $roles['administrator'] );
+
+		// Get all roles which can manage options
+		$roles_with_manage_options = [];
+		foreach ( $roles as $iKey => $role ) {
+			if ( $role['capabilities']['manage_options'] == true ) {
+
+				// Check if the value is already added to the array
+				if ( ! in_array( $iKey, $roles_with_manage_options ) ) {
+					$roles_with_manage_options[$iKey] = $iKey;
+				}
+			}
 		}
+
+		foreach ( $roles_with_manage_options as $iKey => $role ) {
+			if ( in_array( $iKey, $roles_with_manage_options ) && ! current_user_can( $roles_with_manage_options ) ) {
+            	unset( $roles[$iKey] );
+			}
+		}
+
 		return $roles;
 	}
 
@@ -30,8 +46,8 @@ class ISA_User_Caps {
 					$caps[] = 'do_not_allow';
 				}
 				$other = new WP_User( absint( $args[0] ) );
-				if ( $other->has_cap( 'administrator' ) ) {
-					if ( ! current_user_can( 'administrator' ) ) {
+				if ( $other->has_cap( 'manage_options' ) ) {
+					if ( ! current_user_can( 'manage_options' ) ) {
 						$caps[] = 'do_not_allow';
 					}
 				}
@@ -42,8 +58,8 @@ class ISA_User_Caps {
 					break;
 				}
 				$other = new WP_User( absint( $args[0] ) );
-				if ( $other->has_cap( 'administrator' ) ) {
-					if ( ! current_user_can( 'administrator' ) ) {
+				if ( $other->has_cap( 'manage_options' ) ) {
+					if ( ! current_user_can( 'manage_options' ) ) {
 						$caps[] = 'do_not_allow';
 					}
 				}
